@@ -1,0 +1,70 @@
+<HTML>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>API AJAX REQUEST</title>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript">
+
+		function file_upload()
+		{
+			var URL = "API Gateway URL";
+
+			var result = $.ajax({
+				type: "GET",
+				url: URL,
+				async: false,
+				dataType: "json",
+				error: function () {
+					alert('ERROR: EXE');
+					$("#submit").removeAttr("disabled");
+				},
+				success: function (json) {
+					//alert("SUCCESS");
+					$("#submit").removeAttr("disabled");
+				}
+			}).responseJSON;
+
+			var jsonized_result = JSON.parse(result.body)
+			console.log(jsonized_result.PUT_URL)
+
+			var formdata = new FormData($('#form').get(0));
+			console.log(formdata)
+			// POSTでアップロード
+			$.ajax({
+				url: jsonized_result.PUT_URL,
+				type: "PUT",
+				data: formdata,
+				cache: false,
+				contentType: false,
+				processData: false,
+				dataType: "html"
+			})
+				.done(function (data, textStatus, jqXHR) {
+					alert(data);
+				})
+				.fail(function (jqXHR, textStatus, errorThrown) {
+					alert("fail");
+				});
+
+
+
+		};
+
+
+	</script>
+
+</head>
+
+<body>
+<form id="form">
+<input type="file" name="file">
+<button type="button" onclick="file_upload()">アップロード</button>
+</form>
+
+</body>
+
+</HTML>
+
+
